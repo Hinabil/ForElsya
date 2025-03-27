@@ -25,6 +25,8 @@
             text-align: center;
             max-width: 90%;
             width: 400px;
+            position: relative;
+            z-index: 1;
         }
         h1 {
             color: #e91e63;
@@ -51,9 +53,19 @@
             font-size: 16px;
             margin-top: 10px;
         }
+        #fireworksCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0; /* Supaya kembang api ada di belakang */
+            pointer-events: none;
+        }
     </style>
 </head>
 <body>
+    <canvas id="fireworksCanvas"></canvas>
     <div class="card">
         <h1>🎂 Selamat Ulang Tahun, Elsya! 🎉</h1>
         <p>Semoga panjang umur, sehat selalu, dan semua cita-cita tercapai!</p>
@@ -107,6 +119,66 @@
             .then(() => window.location.href = "sayang_nabil.html")
             .catch(err => alert("Gagal menyimpan harapan."));
         }
+
+        const canvas = document.getElementById('fireworksCanvas');
+        const ctx = canvas.getContext('2d');
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        class Firework {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.size = Math.random() * 3 + 1;
+                this.speedX = (Math.random() - 0.5) * 4;
+                this.speedY = Math.random() * -5 - 2;
+                this.color = `hsl(${Math.random() * 360}, 100%, 50%)`;
+            }
+
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                this.size *= 0.98;
+            }
+
+            draw() {
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        const fireworks = [];
+
+        function createFirework() {
+            for (let i = 0; i < 10; i++) {
+                fireworks.push(new Firework(Math.random() * canvas.width, canvas.height));
+            }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let i = 0; i < fireworks.length; i++) {
+                fireworks[i].update();
+                fireworks[i].draw();
+
+                if (fireworks[i].size < 0.5) {
+                    fireworks.splice(i, 1);
+                    i--;
+                }
+            }
+
+            requestAnimationFrame(animate);
+        }
+
+        function startFireworks() {
+            setInterval(createFirework, 500);
+            animate();
+        }
+
+        window.onload = startFireworks;
     </script>
 </body>
 </html>
