@@ -72,7 +72,7 @@
 <body>
     <canvas id="fireworksCanvas"></canvas>
     <div class="card">
-        <h1>🎂 Oke. pertanyaan terakhir, apakah kamu sayang Nabil? 🥺</h1>
+        <h1>🎂 Apakah kamu sayang Nabil? 🥺</h1>
         <div class="btn-container">
             <button onclick="showLove()">Ya</button>
             <button id="noBtn" onmouseover="moveButton()">Tidak</button>
@@ -113,7 +113,7 @@
                     this.size = Math.random() * 5 + 2;
                     this.speedX = (Math.random() - 0.5) * 6;
                     this.speedY = Math.random() * -6 - 3;
-                    this.color = hsl(${Math.random() * 360}, 100%, 50%);
+                    this.color = `hsl(${Math.random() * 360}, 100%, 50%)`;
                 }
 
                 update() {
