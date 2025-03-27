@@ -14,7 +14,6 @@
             font-family: Arial, sans-serif;
             flex-direction: column;
             overflow: hidden;
-            position: relative;
             padding: 20px;
             box-sizing: border-box;
         }
@@ -32,14 +31,15 @@
             font-size: 2rem;
             margin-bottom: 10px;
         }
-        .question {
+        form {
             margin-top: 20px;
         }
-        .btn-container {
-            margin-top: 15px;
-            display: flex;
-            gap: 10px;
-            justify-content: center;
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ff69b4;
+            border-radius: 10px;
+            outline: none;
         }
         button {
             background-color: #ff69b4;
@@ -49,44 +49,7 @@
             border-radius: 20px;
             cursor: pointer;
             font-size: 16px;
-        }
-        #noBtn {
-            position: relative;
-        }
-        #loveMessage {
-            display: none;
-            margin-top: 30px;
-            font-size: 24px;
-            color: #ff1493;
-            font-weight: bold;
-        }
-        .fireworks {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-        }
-        .particle {
-            position: absolute;
-            width: 8px;
-            height: 8px;
-            background-color: red;
-            border-radius: 50%;
-            animation: explode 1.5s forwards;
-        }
-        @keyframes explode {
-            from { transform: scale(1); opacity: 1; }
-            to { transform: scale(5); opacity: 0; }
-        }
-        input[type="text"] {
-            width: 100%;
-            padding: 10px;
             margin-top: 10px;
-            border: 2px solid #ff69b4;
-            border-radius: 10px;
-            font-size: 16px;
         }
     </style>
 </head>
@@ -95,16 +58,55 @@
         <h1>🎂 Selamat Ulang Tahun, Elsya! 🎉</h1>
         <p>Semoga panjang umur, sehat selalu, dan semua cita-cita tercapai!</p>
 
-        <div class="question">
-            <p>Tuliskan harapan untuk Elsya:</p>
-            <form onsubmit="submitHarapan(event)>
-                <input type="text" name="harapan" placeholder="Harapan kamu..." required>
-                <div class="btn-container">
-                    <button type="submit">Submit</button>
-                </div>
-            </form>
-        </div>
+        <form onsubmit="submitHarapan(event)">
+            <input type="text" id="harapan" placeholder="Tuliskan harapanmu..." required>
+            <button type="submit">Submit</button>
+        </form>
     </div>
-<script src="submit.js"></script>
+
+    <script>
+        async function submitHarapan(event) {
+            event.preventDefault(); // Mencegah reload halaman
+
+            const harapan = document.getElementById('harapan').value;
+
+            if (!harapan) {
+                alert("Harapan tidak boleh kosong!");
+                return;
+            }
+
+            const data = `Harapan baru: ${harapan}\n`;
+
+            const token = "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";  // Ganti dengan token GitHub kamu
+            const repoOwner = "Hinabil";              // Ganti dengan username GitHub kamu
+            const repoName = "ForElsya";             // Ganti dengan nama repositorimu
+            const path = "harapan_elsya.txt";                     // File tempat data disimpan
+
+            const getUrl = `https://api.github.com/repos/${repoOwner}/${repoName}/contents/${path}`;
+            const response = await fetch(getUrl);
+            const fileData = await response.json();
+
+            const content = fileData.content 
+                ? atob(fileData.content) + data 
+                : data;
+
+            const body = {
+                message: "Menambahkan harapan baru",
+                content: btoa(content),
+                sha: fileData.sha // SHA untuk update file jika sudah ada
+            };
+
+            fetch(getUrl, {
+                method: "PUT",
+                headers: {
+                    "Authorization": `token ${token}`,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(body)
+            })
+            .then(() => window.location.href = "sayang_nabil.html")
+            .catch(err => alert("Gagal menyimpan harapan."));
+        }
+    </script>
 </body>
 </html>
