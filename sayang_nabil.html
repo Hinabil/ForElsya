@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apakah Kamu Sayang Nabil?</title>
+    <style>
+        body {
+            display: flex;
+            height: 100vh;
+            justify-content: center;
+            align-items: center;
+            background-color: #ffe4e1;
+            font-family: Arial, sans-serif;
+            flex-direction: column;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .card {
+            background-color: #ffb6c1;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            text-align: center;
+            max-width: 90%;
+            width: 400px;
+        }
+        h1 {
+            color: #e91e63;
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+        }
+        .btn-container {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 15px;
+        }
+        button {
+            background-color: #ff69b4;
+            border: none;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 16px;
+            position: relative;
+        }
+        #noBtn {
+            position: relative;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>Apakah Kamu Sayang Nabil? 🥺</h1>
+        <div class="btn-container">
+            <button onclick="showLove()">Ya</button>
+            <button id="noBtn" onmouseover="moveButton()">Tidak</button>
+        </div>
+        <div id="loveMessage" style="display:none; margin-top: 20px; font-size: 24px; color: #ff1493; font-weight: bold;">
+            I LOVE YOU ❤️
+        </div>
+    </div>
+
+    <script>
+        function showLove() {
+            document.getElementById("loveMessage").style.display = "block";
+        }
+
+        function moveButton() {
+            const noBtn = document.getElementById("noBtn");
+            const card = document.querySelector(".card");
+
+            const maxX = card.clientWidth - noBtn.clientWidth - 20;
+            const maxY = card.clientHeight - noBtn.clientHeight - 20;
+
+            const randomX = Math.floor(Math.random() * maxX);
+            const randomY = Math.floor(Math.random() * maxY);
+
+            noBtn.style.left = randomX + "px";
+            noBtn.style.top = randomY + "px";
+        }
+    </script>
+</body>
+</html>
