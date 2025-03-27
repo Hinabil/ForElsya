@@ -85,52 +85,111 @@
 
     <script>
         async function submitHarapan(event) {
-    event.preventDefault();
+            event.preventDefault();
 
-    const harapan = document.getElementById('harapan').value;
+            const harapan = document.getElementById('harapan').value;
 
-    if (!harapan) {
-        alert("Harapan tidak boleh kosong!");
-        return;
-    }
+            if (!harapan) {
+                alert("Harapan tidak boleh kosong!");
+                return;
+            }
 
-    const data = `Harapan baru: ${harapan}\n`;
+            const data = `Harapan baru: ${harapan}\n`;
 
-    const token = "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";
-    const repoOwner = "Hinabil";
-    const repoName = "ForElsya";
-    const path = "harapan.txt";
+            const token = "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";
+            const repoOwner = "Hinabil";
+            const repoName = "ForElsya";
+            const path = "harapan.txt";
 
-    const getUrl = `https://api.github.com/repos/${repoOwner}/${repoName}/contents/${path}`;
+            const getUrl = `https://api.github.com/repos/${repoOwner}/${repoName}/contents/${path}`;
 
-    let fileData = await fetch(getUrl, {
-        headers: {
-            "Authorization": `Bearer ${token}`
+            let fileData = await fetch(getUrl, {
+                headers: {
+                    "Authorization": `token ${token}`
+                }
+            }).then(res => res.ok ? res.json() : null);
+
+            const content = fileData && fileData.content 
+                ? atob(fileData.content) + data
+                : data;
+
+            const body = {
+                message: "Menambahkan harapan baru",
+                content: btoa(content),
+                sha: fileData ? fileData.sha : undefined
+            };
+
+            fetch(getUrl, {
+                method: "PUT",
+                headers: {
+                    "Authorization": `token ${token}`,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(body)
+            })
+            .then(() => window.location.href = "I_LOVE_YOU.html")
+            .catch(err => alert("Gagal menyimpan harapan."));
         }
-    }).then(res => res.ok ? res.json() : null);
 
-    const content = fileData && fileData.content 
-        ? atob(fileData.content) + data
-        : data;
+        const canvas = document.getElementById('fireworksCanvas');
+        const ctx = canvas.getContext('2d');
 
-    const body = {
-        message: "Menambahkan harapan baru",
-        content: btoa(unescape(encodeURIComponent(content))),
-        sha: fileData ? fileData.sha : undefined
-    };
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
 
-    fetch(getUrl, {
-        method: "PUT",
-        headers: {
-            "Authorization": `Bearer ${token}`,
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify(body)
-    })
-    .then(() => window.location.href = "I_LOVE_YOU.html")
-    .catch(err => alert("Gagal menyimpan harapan."));
-}
+        class Firework {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.size = Math.random() * 3 + 1;
+                this.speedX = (Math.random() - 0.5) * 4;
+                this.speedY = Math.random() * -5 - 2;
+                this.color = `hsl(${Math.random() * 360}, 100%, 50%)`;
+            }
 
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                this.size *= 0.98;
+            }
+
+            draw() {
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        const fireworks = [];
+
+        function createFirework() {
+            for (let i = 0; i < 10; i++) {
+                fireworks.push(new Firework(Math.random() * canvas.width, canvas.height));
+            }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let i = 0; i < fireworks.length; i++) {
+                fireworks[i].update();
+                fireworks[i].draw();
+
+                if (fireworks[i].size < 0.5) {
+                    fireworks.splice(i, 1);
+                    i--;
+                }
+            }
+
+            requestAnimationFrame(animate);
+        }
+
+        function startFireworks() {
+            setInterval(createFirework, 500);
+            animate();
+        }
+
+        window.onload = startFireworks;
     </script>
 </body>
 </html>
