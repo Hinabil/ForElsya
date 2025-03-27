@@ -1,90 +1,195 @@
-<script>
-    const canvas = document.getElementById('fireworksCanvas');
-    const ctx = canvas.getContext('2d');
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Selamat Ulang Tahun, Elsya!</title>
+    <style>
+        body {
+            display: flex;
+            height: 100vh;
+            justify-content: center;
+            align-items: center;
+            background-color: #ffe4e1;
+            font-family: Arial, sans-serif;
+            flex-direction: column;
+            overflow: hidden;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .card {
+            background-color: #ffb6c1;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            text-align: center;
+            max-width: 90%;
+            width: 400px;
+            position: relative;
+            z-index: 1;
+        }
+        h1 {
+            color: #e91e63;
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        p {
+            color: #d81b60;
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+        form {
+            margin-top: 20px;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 0px;
+            border: 2px solid #ff69b4;
+            border-radius: 10px;
+            outline: none;
+            height: 50px
+        }
+        button {
+            background-color: #ff69b4;
+            border: none;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+        #fireworksCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="fireworksCanvas"></canvas>
+    <div class="card">
+        <h1>🎂 Selamat Ulang Tahun, Elsya! 🎉</h1>
+        <p>Semoga panjang umur, sehat selalu, dan semua cita-cita tercapai! Semoga kamu selalu dikelilingi orang-orang yang sayang sama elsya. Jangan pernah berhenti bermimpi dan berusaha untuk gapai apapun yang elsya mau. Nabil tau kamu lebih dari hebat untuk meraih apa yang kamu inginkan. Selamat bertambah usia, Elsya! 🎈🎁</p>
 
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+        <form onsubmit="submitHarapan(event)">
+            <input type="text" id="harapan" placeholder="Tuliskan harapanmu..." required>
+            <button type="submit">Submit</button>
+        </form>
+    </div>
 
-    class Firework {
-        constructor(x, y) {
-            this.x = x;
-            this.y = y;
-            this.size = Math.random() * 4 + 2;
-            this.speedX = (Math.random() - 0.5) * 6;
-            this.speedY = Math.random() * -8 - 3;
-            this.color = `hsl(${Math.random() * 360}, 100%, 50%)`;
-            this.sparks = [];
+    <script>
+        async function submitHarapan(event) {
+            event.preventDefault();
 
-            for (let i = 0; i < 10; i++) {
-                this.sparks.push({
-                    x: this.x,
-                    y: this.y,
-                    speedX: (Math.random() - 0.5) * 4,
-                    speedY: (Math.random() - 0.5) * 4,
-                    size: Math.random() * 2,
-                    color: this.color,
-                    life: Math.random() * 40 + 40
-                });
+            const harapan = document.getElementById('harapan').value;
+
+            if (!harapan) {
+                alert("Harapan tidak boleh kosong!");
+                return;
             }
+
+            const data = `Harapan baru: ${harapan}\n`;
+
+            const token = "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";
+            const repoOwner = "Hinabil";
+            const repoName = "ForElsya";
+            const path = "harapan.txt";
+
+            const getUrl = `https://api.github.com/repos/${repoOwner}/${repoName}/contents/${path}`;
+
+            let fileData = await fetch(getUrl, {
+                headers: {
+                    "Authorization": `token ${token}`
+                }
+            }).then(res => res.ok ? res.json() : null);
+
+            const content = fileData && fileData.content 
+                ? atob(fileData.content) + data
+                : data;
+
+            const body = {
+                message: "Menambahkan harapan baru",
+                content: btoa(content),
+                sha: fileData ? fileData.sha : undefined
+            };
+
+            fetch(getUrl, {
+                method: "PUT",
+                headers: {
+                    "Authorization": `token ${token}`,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(body)
+            })
+            .then(() => window.location.href = "I_LOVE_YOU.html")
+            .catch(err => alert("Gagal menyimpan harapan."));
         }
 
-        update() {
-            this.x += this.speedX;
-            this.y += this.speedY;
-            this.size *= 0.98;
+        const canvas = document.getElementById('fireworksCanvas');
+        const ctx = canvas.getContext('2d');
 
-            this.sparks.forEach(spark => {
-                spark.x += spark.speedX;
-                spark.y += spark.speedY;
-                spark.size *= 0.95;
-                spark.life--;
-            });
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
 
-            this.sparks = this.sparks.filter(spark => spark.life > 0);
-        }
+        class Firework {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.size = Math.random() * 3 + 1;
+                this.speedX = (Math.random() - 0.5) * 4;
+                this.speedY = Math.random() * -5 - 2;
+                this.color = `hsl(${Math.random() * 360}, 100%, 50%)`;
+            }
 
-        draw() {
-            ctx.fillStyle = this.color;
-            ctx.beginPath();
-            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-            ctx.fill();
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                this.size *= 0.98;
+            }
 
-            this.sparks.forEach(spark => {
-                ctx.fillStyle = spark.color;
+            draw() {
+                ctx.fillStyle = this.color;
                 ctx.beginPath();
-                ctx.arc(spark.x, spark.y, spark.size, 0, Math.PI * 2);
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
                 ctx.fill();
-            });
-        }
-    }
-
-    const fireworks = [];
-
-    function createFirework() {
-        for (let i = 0; i < 20; i++) { // Lebih banyak percikan cahaya
-            fireworks.push(new Firework(Math.random() * canvas.width, canvas.height));
-        }
-    }
-
-    function animate() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-        fireworks.forEach((firework, index) => {
-            firework.update();
-            firework.draw();
-
-            if (firework.size < 0.5 && firework.sparks.length === 0) {
-                fireworks.splice(index, 1);
             }
-        });
+        }
 
-        requestAnimationFrame(animate);
-    }
+        const fireworks = [];
 
-    function startFireworks() {
-        setInterval(createFirework, 300); // Mempercepat jeda antar kembang api
-        animate();
-    }
+        function createFirework() {
+            for (let i = 0; i < 10; i++) {
+                fireworks.push(new Firework(Math.random() * canvas.width, canvas.height));
+            }
+        }
 
-    window.onload = startFireworks;
-</script>
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let i = 0; i < fireworks.length; i++) {
+                fireworks[i].update();
+                fireworks[i].draw();
+
+                if (fireworks[i].size < 0.5) {
+                    fireworks.splice(i, 1);
+                    i--;
+                }
+            }
+
+            requestAnimationFrame(animate);
+        }
+
+        function startFireworks() {
+            setInterval(createFirework, 500);
+            animate();
+        }
+
+        window.onload = startFireworks;
+    </script>
+</body>
+</html>
