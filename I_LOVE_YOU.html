@@ -49,8 +49,7 @@
             font-size: 16px;
         }
         #noBtn {
-            position: absolute;
-            transition: transform 0.3s ease;
+            position: relative;
         }
         #loveMessage {
             display: none;
@@ -90,13 +89,14 @@
 
         function moveButton() {
             const noBtn = document.getElementById("noBtn");
-            const maxX = 100; // Batas pergerakan lebih kecil agar tidak terlalu jauh
-            const maxY = 100; 
+            const maxX = window.innerWidth - noBtn.clientWidth - 20;
+            const maxY = window.innerHeight - noBtn.clientHeight - 20;
 
-            const randomX = Math.random() * maxX - maxX / 2;
-            const randomY = Math.random() * maxY - maxY / 2;
+            const randomX = Math.floor(Math.random() * maxX);
+            const randomY = Math.floor(Math.random() * maxY);
 
-            noBtn.style.transform = `translate(${randomX}px, ${randomY}px)`;
+            noBtn.style.left = randomX + "px";
+            noBtn.style.top = randomY + "px";
         }
 
         function startFireworks() {
@@ -113,7 +113,7 @@
                     this.size = Math.random() * 5 + 2;
                     this.speedX = (Math.random() - 0.5) * 6;
                     this.speedY = Math.random() * -6 - 3;
-                    this.color = `hsl(${Math.random() * 360}, 100%, 50%)`;
+                    this.color = hsl(${Math.random() * 360}, 100%, 50%);
                 }
 
                 update() {
