@@ -66,7 +66,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: 0; /* Supaya kembang api ada di belakang */
+            z-index: 0;
             pointer-events: none;
         }
     </style>
@@ -85,7 +85,7 @@
 
     <script>
         async function submitHarapan(event) {
-            event.preventDefault(); // Mencegah reload halaman
+            event.preventDefault();
 
             const harapan = document.getElementById('harapan').value;
 
@@ -96,23 +96,27 @@
 
             const data = `Harapan baru: ${harapan}\n`;
 
-            const token = "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";  // Ganti dengan token GitHub kamu
-            const repoOwner = "Hinabil";              // Ganti dengan username GitHub kamu
-            const repoName = "ForElsya";             // Ganti dengan nama repositorimu
-            const path = "harapan.txt";                     // File tempat data disimpan
+            const token = "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";
+            const repoOwner = "Hinabil";
+            const repoName = "ForElsya";
+            const path = "harapan.txt";
 
             const getUrl = `https://api.github.com/repos/${repoOwner}/${repoName}/contents/${path}`;
-            const response = await fetch(getUrl);
-            const fileData = await response.json();
 
-            const content = fileData.content 
-                ? atob(fileData.content) + data 
+            let fileData = await fetch(getUrl, {
+                headers: {
+                    "Authorization": `token ${token}`
+                }
+            }).then(res => res.ok ? res.json() : null);
+
+            const content = fileData && fileData.content 
+                ? atob(fileData.content) + data
                 : data;
 
             const body = {
                 message: "Menambahkan harapan baru",
                 content: btoa(content),
-                sha: fileData.sha // SHA untuk update file jika sudah ada
+                sha: fileData ? fileData.sha : undefined
             };
 
             fetch(getUrl, {
