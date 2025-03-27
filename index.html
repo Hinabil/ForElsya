@@ -164,7 +164,7 @@
         const fireworks = [];
 
         function createFirework() {
-            for (let i = 0; i < 10; i++) {
+            for (let i = 0; i < 30; i++) {
                 fireworks.push(new Firework(Math.random() * canvas.width, canvas.height));
             }
         }
@@ -185,7 +185,7 @@
         }
 
         function startFireworks() {
-            setInterval(createFirework, 500);
+            setInterval(createFirework, 300);
             animate();
         }
 
