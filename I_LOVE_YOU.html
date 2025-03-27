@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Selamat Ulang Tahun, Elsya!</title>
+    <title>Sayang Nabil ❤️</title>
     <style>
         body {
             display: flex;
@@ -14,6 +14,7 @@
             font-family: Arial, sans-serif;
             flex-direction: column;
             overflow: hidden;
+            position: relative;
             padding: 20px;
             box-sizing: border-box;
         }
@@ -25,23 +26,17 @@
             text-align: center;
             max-width: 90%;
             width: 400px;
-            position: relative;
-            z-index: 1;
         }
         h1 {
             color: #e91e63;
             font-size: 2rem;
             margin-bottom: 10px;
         }
-        form {
-            margin-top: 20px;
-        }
-        input[type="text"] {
-            width: 100%;
-            padding: 10px;
-            border: 2px solid #ff69b4;
-            border-radius: 10px;
-            outline: none;
+        .btn-container {
+            margin-top: 15px;
+            display: flex;
+            gap: 10px;
+            justify-content: center;
         }
         button {
             background-color: #ff69b4;
@@ -51,91 +46,83 @@
             border-radius: 20px;
             cursor: pointer;
             font-size: 16px;
-            margin-top: 10px;
         }
-        #fireworksCanvas {
+        #noBtn {
+            position: relative;
+        }
+        #loveMessage {
+            display: none;
+            margin-top: 30px;
+            font-size: 24px;
+            color: #ff1493;
+            font-weight: bold;
+        }
+        .fireworks {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: 0; /* Supaya kembang api ada di belakang */
             pointer-events: none;
+        }
+        .particle {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background-color: red;
+            border-radius: 50%;
+            animation: explode 1.5s forwards;
+        }
+        @keyframes explode {
+            from { transform: scale(1); opacity: 1; }
+            to { transform: scale(5); opacity: 0; }
         }
     </style>
 </head>
 <body>
-    <canvas id="fireworksCanvas"></canvas>
     <div class="card">
-        <h1>🎂 Selamat Ulang Tahun, Elsya! 🎉</h1>
-        <p>Semoga panjang umur, sehat selalu, dan semua cita-cita tercapai!</p>
+        <h1>🎂 Apakah kamu sayang Nabil? 🥺</h1>
+        <div class="btn-container">
+            <button onclick="showLove()">Ya</button>
+            <button id="noBtn" onmouseover="moveButton()">Tidak</button>
+        </div>
 
-        <form onsubmit="submitHarapan(event)">
-            <input type="text" id="harapan" placeholder="Tuliskan harapanmu..." required>
-            <button type="submit">Submit</button>
-        </form>
+        <div id="loveMessage">I LOVE YOU ❤️</div>
     </div>
 
+    <div class="fireworks" id="fireworks"></div>
+
     <script>
-        function startFireworks() {
-            const canvas = document.getElementById('fireworksCanvas');
-            const ctx = canvas.getContext('2d');
-
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-
-            class Firework {
-                constructor(x, y) {
-                    this.x = x;
-                    this.y = y;
-                    this.size = Math.random() * 5 + 2;
-                    this.speedX = (Math.random() - 0.5) * 6;
-                    this.speedY = Math.random() * -6 - 3;
-                    this.color = `hsl(${Math.random() * 360}, 100%, 50%)`;
-                }
-
-                update() {
-                    this.x += this.speedX;
-                    this.y += this.speedY;
-                    this.size *= 0.96;
-                }
-
-                draw() {
-                    ctx.fillStyle = this.color;
-                    ctx.beginPath();
-                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                    ctx.fill();
-                }
-            }
-
-            const fireworks = [];
-
-            function createFirework() {
-                for (let i = 0; i < 20; i++) {
-                    fireworks.push(new Firework(Math.random() * canvas.width, canvas.height));
-                }
-            }
-
-            function animate() {
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                for (let i = 0; i < fireworks.length; i++) {
-                    fireworks[i].update();
-                    fireworks[i].draw();
-
-                    if (fireworks[i].size < 0.5) {
-                        fireworks.splice(i, 1);
-                        i--;
-                    }
-                }
-
-                requestAnimationFrame(animate);
-            }
-
-            setInterval(createFirework, 400);
-            animate();
+        function showLove() {
+            document.getElementById("loveMessage").style.display = "block";
+            startFireworks();
         }
 
-        window.onload = startFireworks;
+        function moveButton() {
+            const noBtn = document.getElementById("noBtn");
+            const maxX = window.innerWidth - noBtn.clientWidth - 20;
+            const maxY = window.innerHeight - noBtn.clientHeight - 20;
+
+            const randomX = Math.floor(Math.random() * maxX);
+            const randomY = Math.floor(Math.random() * maxY);
+
+            noBtn.style.left = randomX + "px";
+            noBtn.style.top = randomY + "px";
+        }
+
+        function startFireworks() {
+            const fireworks = document.getElementById('fireworks');
+            for (let i = 0; i < 50; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                particle.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 50%)`;
+                particle.style.left = `${Math.random() * 100}vw`;
+                particle.style.top = `${Math.random() * 100}vh`;
+                fireworks.appendChild(particle);
+
+                setTimeout(() => particle.remove(), 1500);
+            }
+        }
     </script>
 </body>
 </html>
