@@ -51,8 +51,7 @@
             font-size: 16px;
         }
         #noBtn {
-            position: absolute;
-            max-width: 100px;
+            position: relative;
         }
         #loveMessage {
             display: none;
@@ -81,6 +80,14 @@
             from { transform: scale(1); opacity: 1; }
             to { transform: scale(5); opacity: 0; }
         }
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            border: 2px solid #ff69b4;
+            border-radius: 10px;
+            font-size: 16px;
+        }
     </style>
 </head>
 <body>
@@ -89,49 +96,14 @@
         <p>Semoga panjang umur, sehat selalu, dan semua cita-cita tercapai!</p>
 
         <div class="question">
-            <p>Apakah kamu sayang Nabil? 🥺</p>
-            <div class="btn-container">
-                <button onclick="showLove()">Ya</button>
-                <button id="noBtn" onmouseover="moveButton()">Tidak</button>
-            </div>
+            <p>Tuliskan harapan untuk Elsya:</p>
+            <form action="sayang_nabil.html" method="GET">
+                <input type="text" name="harapan" placeholder="Harapan kamu..." required>
+                <div class="btn-container">
+                    <button type="submit">Submit</button>
+                </div>
+            </form>
         </div>
-
-        <div id="loveMessage">I LOVE YOU ❤️</div>
     </div>
-
-    <div class="fireworks" id="fireworks"></div>
-
-    <script>
-        function showLove() {
-            document.getElementById("loveMessage").style.display = "block";
-            startFireworks();
-        }
-
-        function moveButton() {
-            const noBtn = document.getElementById("noBtn");
-            const maxX = window.innerWidth - noBtn.clientWidth - 20;
-            const maxY = window.innerHeight - noBtn.clientHeight - 20;
-
-            const randomX = Math.floor(Math.random() * maxX * 0.8); 
-            const randomY = Math.floor(Math.random() * maxY * 0.8);
-
-            noBtn.style.left = randomX + "px";
-            noBtn.style.top = randomY + "px";
-        }
-
-        function startFireworks() {
-            const fireworks = document.getElementById('fireworks');
-            for (let i = 0; i < 50; i++) {
-                const particle = document.createElement('div');
-                particle.classList.add('particle');
-                particle.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 50%)`;
-                particle.style.left = `${Math.random() * 100}vw`;
-                particle.style.top = `${Math.random() * 100}vh`;
-                fireworks.appendChild(particle);
-
-                setTimeout(() => particle.remove(), 1500);
-            }
-        }
-    </script>
 </body>
 </html>
