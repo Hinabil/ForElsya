@@ -14,7 +14,6 @@
             font-family: Arial, sans-serif;
             flex-direction: column;
             overflow: hidden;
-            position: relative;
             padding: 20px;
             box-sizing: border-box;
         }
@@ -26,6 +25,8 @@
             text-align: center;
             max-width: 90%;
             width: 400px;
+            position: relative;
+            z-index: 1;
         }
         h1 {
             color: #e91e63;
@@ -35,7 +36,7 @@
         .btn-container {
             margin-top: 15px;
             display: flex;
-            gap: 10px;
+            gap: 20px;
             justify-content: center;
         }
         button {
@@ -57,29 +58,19 @@
             color: #ff1493;
             font-weight: bold;
         }
-        .fireworks {
+        #fireworksCanvas {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
+            z-index: 0;
             pointer-events: none;
-        }
-        .particle {
-            position: absolute;
-            width: 8px;
-            height: 8px;
-            background-color: red;
-            border-radius: 50%;
-            animation: explode 1.5s forwards;
-        }
-        @keyframes explode {
-            from { transform: scale(1); opacity: 1; }
-            to { transform: scale(5); opacity: 0; }
         }
     </style>
 </head>
 <body>
+    <canvas id="fireworksCanvas"></canvas>
     <div class="card">
         <h1>🎂 Apakah kamu sayang Nabil? 🥺</h1>
         <div class="btn-container">
@@ -89,8 +80,6 @@
 
         <div id="loveMessage">I LOVE YOU ❤️</div>
     </div>
-
-    <div class="fireworks" id="fireworks"></div>
 
     <script>
         function showLove() {
@@ -111,18 +100,64 @@
         }
 
         function startFireworks() {
-            const fireworks = document.getElementById('fireworks');
-            for (let i = 0; i < 50; i++) {
-                const particle = document.createElement('div');
-                particle.classList.add('particle');
-                particle.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 50%)`;
-                particle.style.left = `${Math.random() * 100}vw`;
-                particle.style.top = `${Math.random() * 100}vh`;
-                fireworks.appendChild(particle);
+            const canvas = document.getElementById('fireworksCanvas');
+            const ctx = canvas.getContext('2d');
 
-                setTimeout(() => particle.remove(), 1500);
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+            class Firework {
+                constructor(x, y) {
+                    this.x = x;
+                    this.y = y;
+                    this.size = Math.random() * 5 + 2;
+                    this.speedX = (Math.random() - 0.5) * 6;
+                    this.speedY = Math.random() * -6 - 3;
+                    this.color = `hsl(${Math.random() * 360}, 100%, 50%)`;
+                }
+
+                update() {
+                    this.x += this.speedX;
+                    this.y += this.speedY;
+                    this.size *= 0.96;
+                }
+
+                draw() {
+                    ctx.fillStyle = this.color;
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                    ctx.fill();
+                }
             }
+
+            const fireworks = [];
+
+            function createFirework() {
+                for (let i = 0; i < 30; i++) {
+                    fireworks.push(new Firework(Math.random() * canvas.width, canvas.height));
+                }
+            }
+
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                for (let i = 0; i < fireworks.length; i++) {
+                    fireworks[i].update();
+                    fireworks[i].draw();
+
+                    if (fireworks[i].size < 0.5) {
+                        fireworks.splice(i, 1);
+                        i--;
+                    }
+                }
+
+                requestAnimationFrame(animate);
+            }
+
+            setInterval(createFirework, 300);
+            animate();
         }
+
+        window.onload = startFireworks;
     </script>
 </body>
 </html>
