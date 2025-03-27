@@ -32,14 +32,13 @@ async function submitHarapan(event) {
 
     // Kirim data ke GitHub
     fetch(getUrl, {
-        method: "PUT",
-        headers: {
-            "Authorization": `token ${token}`,
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify(body)
-    })
-    .then(res => res.json())
-    .then(() => alert("Harapanmu telah disimpan!"))
-    .catch(err => alert("Gagal menyimpan harapan."));
-}
+                method: "PUT",
+                headers: {
+                    "Authorization": `token ${token}`,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(body)
+            })
+            .then(() => window.location.href = "sayang_nabil.html")
+            .catch(err => alert("Gagal menyimpan harapan."));
+        }
