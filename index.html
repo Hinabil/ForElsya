@@ -1,35 +1,63 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Happy Birthday Elsya!</title>
+    <title>Selamat Ulang Tahun, Elsya!</title>
     <style>
         body {
             display: flex;
             height: 100vh;
             justify-content: center;
             align-items: center;
-            flex-direction: column;
             background-color: #ffe4e1;
+            font-family: Arial, sans-serif;
+            flex-direction: column;
             overflow: hidden;
-            margin: 0;
-        }
-        .question-box {
             position: relative;
-            background-color: #ffcccb;
             padding: 20px;
-            border-radius: 15px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            box-sizing: border-box;
         }
-        .moving-box {
-            position: absolute;
-            background-color: #ff6f61;
+        .card {
+            background-color: #ffb6c1;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            text-align: center;
+            max-width: 90%;
+            width: 400px;
+        }
+        h1 {
+            color: #e91e63;
+            font-size: 1.8rem;
+        }
+        .question {
+            margin-top: 20px;
+        }
+        .btn-container {
+            margin-top: 15px;
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+        button {
+            background-color: #ff69b4;
+            border: none;
             color: #fff;
             padding: 10px 20px;
-            border-radius: 10px;
+            border-radius: 20px;
             cursor: pointer;
-            transition: transform 0.3s;
+            font-size: 16px;
+        }
+        #noBtn {
+            position: absolute;
+        }
+        #loveMessage {
+            display: none;
+            margin-top: 30px;
+            font-size: 24px;
+            color: #ff1493;
+            font-weight: bold;
         }
         .fireworks {
             position: fixed;
@@ -39,49 +67,54 @@
             height: 100%;
             pointer-events: none;
         }
-
         .particle {
-    position: absolute;
-    width: 12px; /* Lebih besar */
-    height: 12px; /* Lebih besar */
-    background-color: red;
-    border-radius: 50%;
-    animation: explode 2s forwards; /* Durasi lebih lama */
-}
-
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background-color: red;
+            border-radius: 50%;
+            animation: explode 1.5s forwards;
+        }
         @keyframes explode {
             from { transform: scale(1); opacity: 1; }
-            to { transform: scale(10); opacity: 0; } /* Ukuran lebih besar */
-}
-        
+            to { transform: scale(5); opacity: 0; }
+        }
     </style>
 </head>
 <body>
+    <div class="card">
+        <h1>🎂 Selamat Ulang Tahun, Elsya! 🎉</h1>
+        <p>Semoga panjang umur, sehat selalu, dan semua cita-cita tercapai!</p>
 
-    <h1>🎉 Happy Birthday Elsya! 🎉</h1>
-    <div class="question-box">
-        <p>Kamu sayang Nabil? 😘</p>
-        <button onclick="showLove()">Ya</button>
-        <div class="moving-box" id="movingBox" onclick="moveBox()">Tidak</div>
+        <div class="question">
+            <p>Apakah kamu sayang Nabil? 🥺</p>
+            <div class="btn-container">
+                <button onclick="showLove()">Ya</button>
+                <button id="noBtn" onmouseover="moveButton()">Tidak</button>
+            </div>
+        </div>
+
+        <div id="loveMessage">I LOVE YOU ❤️</div>
     </div>
 
     <div class="fireworks" id="fireworks"></div>
 
     <script>
         function showLove() {
-            document.body.innerHTML = '<h1 style="color: red;">I LOVE YOU ❤️</h1>';
+            document.getElementById("loveMessage").style.display = "block";
             startFireworks();
         }
 
-        function moveBox() {
-            const box = document.getElementById("movingBox");
-            const maxX = window.innerWidth - box.clientWidth;
-            const maxY = window.innerHeight - box.clientHeight;
+        function moveButton() {
+            const noBtn = document.getElementById("noBtn");
+            const maxX = window.innerWidth - noBtn.clientWidth;
+            const maxY = window.innerHeight - noBtn.clientHeight;
 
             const randomX = Math.floor(Math.random() * maxX);
             const randomY = Math.floor(Math.random() * maxY);
 
-            box.style.transform = `translate(${randomX}px, ${randomY}px)`;
+            noBtn.style.left = randomX + "px";
+            noBtn.style.top = randomY + "px";
         }
 
         function startFireworks() {
