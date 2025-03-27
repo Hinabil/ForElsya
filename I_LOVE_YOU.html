@@ -38,8 +38,6 @@
             display: flex;
             gap: 20px;
             justify-content: center;
-            position: relative; /* Tambahkan posisi relative agar batas gerakan tombol "Tidak" */
-            height: 50px; /* Tinggi tetap agar tidak menimpa teks */
         }
         button {
             background-color: #ff69b4;
@@ -89,3 +87,77 @@
             document.getElementById("loveMessage").style.display = "block";
             startFireworks();
         }
+
+        function moveButton() {
+            const noBtn = document.getElementById("noBtn");
+            const maxX = 100; // Batas pergerakan lebih kecil agar tidak terlalu jauh
+            const maxY = 100; 
+
+            const randomX = Math.random() * maxX - maxX / 2;
+            const randomY = Math.random() * maxY - maxY / 2;
+
+            noBtn.style.transform = `translate(${randomX}px, ${randomY}px)`;
+        }
+
+        function startFireworks() {
+            const canvas = document.getElementById('fireworksCanvas');
+            const ctx = canvas.getContext('2d');
+
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+            class Firework {
+                constructor(x, y) {
+                    this.x = x;
+                    this.y = y;
+                    this.size = Math.random() * 5 + 2;
+                    this.speedX = (Math.random() - 0.5) * 6;
+                    this.speedY = Math.random() * -6 - 3;
+                    this.color = `hsl(${Math.random() * 360}, 100%, 50%)`;
+                }
+
+                update() {
+                    this.x += this.speedX;
+                    this.y += this.speedY;
+                    this.size *= 0.96;
+                }
+
+                draw() {
+                    ctx.fillStyle = this.color;
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
+
+            const fireworks = [];
+
+            function createFirework() {
+                for (let i = 0; i < 30; i++) {
+                    fireworks.push(new Firework(Math.random() * canvas.width, canvas.height));
+                }
+            }
+
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                for (let i = 0; i < fireworks.length; i++) {
+                    fireworks[i].update();
+                    fireworks[i].draw();
+
+                    if (fireworks[i].size < 0.5) {
+                        fireworks.splice(i, 1);
+                        i--;
+                    }
+                }
+
+                requestAnimationFrame(animate);
+            }
+
+            setInterval(createFirework, 300);
+            animate();
+        }
+
+        window.onload = startFireworks;
+    </script>
+</body>
+</html>
