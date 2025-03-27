@@ -41,18 +41,19 @@
         }
 
         .particle {
-            position: absolute;
-            width: 8px;
-            height: 8px;
-            background-color: red;
-            border-radius: 50%;
-            animation: explode 1.5s forwards;
-        }
+    position: absolute;
+    width: 12px; /* Lebih besar */
+    height: 12px; /* Lebih besar */
+    background-color: red;
+    border-radius: 50%;
+    animation: explode 2s forwards; /* Durasi lebih lama */
+}
 
         @keyframes explode {
             from { transform: scale(1); opacity: 1; }
-            to { transform: scale(5); opacity: 0; }
-        }
+            to { transform: scale(10); opacity: 0; } /* Ukuran lebih besar */
+}
+        
     </style>
 </head>
 <body>
