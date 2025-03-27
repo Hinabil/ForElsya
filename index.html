@@ -29,7 +29,8 @@
         }
         h1 {
             color: #e91e63;
-            font-size: 1.8rem;
+            font-size: 2rem;
+            margin-bottom: 10px;
         }
         .question {
             margin-top: 20px;
@@ -50,7 +51,7 @@
             font-size: 16px;
         }
         #noBtn {
-            position: absolute;
+            position: relative;
         }
         #loveMessage {
             display: none;
@@ -107,8 +108,8 @@
 
         function moveButton() {
             const noBtn = document.getElementById("noBtn");
-            const maxX = window.innerWidth - noBtn.clientWidth;
-            const maxY = window.innerHeight - noBtn.clientHeight;
+            const maxX = window.innerWidth - noBtn.clientWidth - 20;
+            const maxY = window.innerHeight - noBtn.clientHeight - 20;
 
             const randomX = Math.floor(Math.random() * maxX);
             const randomY = Math.floor(Math.random() * maxY);
