@@ -39,6 +39,20 @@
             height: 100%;
             pointer-events: none;
         }
+
+        .particle {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background-color: red;
+            border-radius: 50%;
+            animation: explode 1.5s forwards;
+        }
+
+        @keyframes explode {
+            from { transform: scale(1); opacity: 1; }
+            to { transform: scale(5); opacity: 0; }
+        }
     </style>
 </head>
 <body>
@@ -71,30 +85,17 @@
 
         function startFireworks() {
             const fireworks = document.getElementById('fireworks');
-            for (let i = 0; i < 30; i++) {
-                const spark = document.createElement('div');
-                spark.style.position = 'absolute';
-                spark.style.width = '5px';
-                spark.style.height = '5px';
-                spark.style.background = `hsl(${Math.random() * 360}, 100%, 50%)`;
-                spark.style.left = Math.random() * 100 + 'vw';
-                spark.style.top = Math.random() * 100 + 'vh';
-                spark.style.borderRadius = '50%';
-                spark.style.animation = `explode 1.5s ease-out forwards`;
-                fireworks.appendChild(spark);
+            for (let i = 0; i < 50; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                particle.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 50%)`;
+                particle.style.left = `${Math.random() * 100}vw`;
+                particle.style.top = `${Math.random() * 100}vh`;
+                fireworks.appendChild(particle);
 
-                setTimeout(() => spark.remove(), 1500);
+                setTimeout(() => particle.remove(), 1500);
             }
         }
-
-        // Efek animasi ledakan mercon
-        const style = document.createElement('style');
-        style.innerHTML = `
-        @keyframes explode {
-            0% { transform: scale(1); opacity: 1; }
-            100% { transform: scale(4); opacity: 0; }
-        }`;
-        document.head.appendChild(style);
     </script>
 </body>
 </html>
